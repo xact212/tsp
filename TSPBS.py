@@ -1,20 +1,21 @@
 def TSPBS(inpGraph):
-    bestPath = []
+    bestPath = [] #define constants
     numNodes = len(inpGraph)
     bestCost = float("inf")
     def _TSP(currPath, currCost):
-        nonlocal bestCost
+        nonlocal bestCost #nessecary to tell closure to treat these varaibles within the parent's scope
         nonlocal bestPath
-        if len(currPath) == numNodes:
+        #checks to end recursion
+        if len(currPath) == numNodes: #terminate if path length is the same as the number of nodes in the graph
             currCost += inpGraph[currPath[len(currPath) - 1]][0] #add the connection to the first node
-            if currCost < bestCost:
+            if currCost < bestCost: #only replace the best path if the current path has a smaller weighted sum
                 bestCost = currCost
                 bestPath = currPath.copy()
             return
-        if currCost >= bestCost:
+        if currCost >= bestCost: #terminate early if the current cost is already worse than the best cost 
             return
-        adjacent = inpGraph[currPath[len(currPath) - 1]]
-        for edge in range(len(adjacent)):
+        adjacent = inpGraph[currPath[len(currPath) - 1]] #get all the edges from the current node
+        for edge in range(len(adjacent)): #try adding all of them to the stack
             if edge in currPath:
                 continue
             if adjacent[edge] == 0:
@@ -23,7 +24,7 @@ def TSPBS(inpGraph):
             _TSP(currPath, currCost + adjacent[edge])
             currPath.pop()
     _TSP([0], 0)
-    bestPath.append(0)
+    bestPath.append(0) #add the last (first) node at the end so we don't have to do it every time we find a new best path
     return (bestCost, bestPath)           
 
 G = [
